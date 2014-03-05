@@ -1,4 +1,4 @@
-var constructorApp = angular.module('VacancyWidgetConstructorApp', ['ngTagsInput', 'urlUtils'])
+var constructorApp = angular.module('VacancyWidgetConstructorApp', ['ngTagsInput', 'urlUtils', 'hhApi'])
     .config(function(tagsInputConfigProvider) {
         tagsInputConfigProvider
             .setDefaults('tagsInput', {
@@ -34,7 +34,6 @@ constructorApp.factory('VacanciesConstructor', function(Serialization){
         }
     }
 });
-
 constructorApp.factory('Serialization', function(){
     var undef;
     // A handy reference.
@@ -135,47 +134,5 @@ constructorApp.factory('Serialization', function(){
 
         // jQuery param function
         param: $.param
-    }
-});
-
-constructorApp.factory('HHApi', function($http, $q, urlUtils){
-    return{
-        /**
-         * Retrieves list of Regions from HH API
-         * @param searchString
-         * @returns {Function|promise|Function}
-         */
-        findRegions: function(searchString){
-            var d = $q.defer();
-
-            // !fake data. simulates http delay
-            // TODO: add call to HH API
-            setTimeout(function(){
-                d.resolve(
-                    _([
-                        'Minsk',
-                        'Moscow',
-                        'Kiev',
-                        'Gatovo'
-                    ]).filter(function(x){ return x.toLowerCase().indexOf(searchString.toLowerCase()) != -1;})
-                );
-            }, 100);
-
-            return d.promise;
-        },
-
-        /**
-         * Retrieves specializations from HH API
-         * @returns {Function|promise|Function}
-         */
-        getSpecializations: function(){
-            var d = $q.defer();
-            $http.get(urlUtils.getHHApiUrl("/specializations"))
-                .then(function(data, status, headers, config){
-                    d.resolve(data.data);
-                });
-
-            return d.promise;
-        }
     }
 });
