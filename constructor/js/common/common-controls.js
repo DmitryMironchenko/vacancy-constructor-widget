@@ -15,15 +15,15 @@ commonControls.directive('treeView', function($compile, $rootScope){
             return function linkingFunction($scope, $linkElement, $linkAttributes){
                 console.log('treeView linkingFunction', $scope.areas, $scope.selectedAreas);
 
-                //setTimeout(function(){$linkElement.find('.tree:eq(0)').tree({
-                //    onCheck: {
-                //        ancestors: 'uncheck',
-                //        descendants: 'uncheck'
-                //    }/*,
-                //    onUncheck: {
-                //        descendants: 'uncheck'
-                //    }*/
-                //});}, 300);
+                setTimeout(function(){$linkElement.find('.tree:eq(0)').tree({
+                    onCheck: {
+                        ancestors: 'uncheck',
+                        descendants: 'uncheck'
+                    }/*,
+                    onUncheck: {
+                        descendants: 'uncheck'
+                    }*/
+                });}, 1000);
 
                 $scope.$on("DIALOG_CLOSED", function(e){
                     /*
