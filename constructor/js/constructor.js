@@ -1,4 +1,4 @@
-var constructorApp = angular.module('VacancyWidgetConstructorApp', ['ngTagsInput', 'urlUtils'])
+var constructorApp = angular.module('VacancyWidgetConstructorApp', ['ngTagsInput', 'urlUtils', 'hhApi', 'commonControls'])
     .config(function(tagsInputConfigProvider) {
         tagsInputConfigProvider
             .setDefaults('tagsInput', {
@@ -12,19 +12,37 @@ var constructorApp = angular.module('VacancyWidgetConstructorApp', ['ngTagsInput
         });
     });
 
-function WidgetConstructorCtrl($scope, VacanciesConstructor, HHApi){
-    $scope.regions = ["Минск", "Москва", "Гатово"];
+function WidgetConstructorCtrl($scope, VacanciesConstructor, HHApi,$rootScope){
+    $scope.areas = [];
+    $scope.selectedareas = [];
+
 
     $scope.keyWords = VacanciesConstructor.buildLink();
 
     $scope.loadRegionsSuggestion = function(query){
-        return HHApi.findRegions(query);
+        return HHApi.searchRegions(query);
     }
+
+    HHApi.getRegions()
+        .then(function(data){$scope.areas = data;});
 
     HHApi.getSpecializations()
         .then(function(data){
-            console.log('Specializations received', data);
+            //console.log('Specializations received', data);
         });
+
+    $scope.$on("ITEMS_SELECTED", function(e, args){
+        console.log('ITEMS_SELECTED event caught in main controller', args.items, $scope.selectedareas, _.union($scope.selectedareas, args.items));
+
+        $scope.selectedareas = angular.copy(_.union($scope.selectedareas, args.items));
+
+        // very bad approach
+        $('.tag-input').focus().blur();
+    });
+
+    $scope.$watchCollection('selectedareas', function(newVal, oldVal){
+        console.log('$scope.selectedareas changed', $scope.selectedareas);
+    }, true);
 }
 
 constructorApp.factory('VacanciesConstructor', function(Serialization){
@@ -34,7 +52,6 @@ constructorApp.factory('VacanciesConstructor', function(Serialization){
         }
     }
 });
-
 constructorApp.factory('Serialization', function(){
     var undef;
     // A handy reference.
@@ -135,47 +152,5 @@ constructorApp.factory('Serialization', function(){
 
         // jQuery param function
         param: $.param
-    }
-});
-
-constructorApp.factory('HHApi', function($http, $q, urlUtils){
-    return{
-        /**
-         * Retrieves list of Regions from HH API
-         * @param searchString
-         * @returns {Function|promise|Function}
-         */
-        findRegions: function(searchString){
-            var d = $q.defer();
-
-            // !fake data. simulates http delay
-            // TODO: add call to HH API
-            setTimeout(function(){
-                d.resolve(
-                    _([
-                        'Minsk',
-                        'Moscow',
-                        'Kiev',
-                        'Gatovo'
-                    ]).filter(function(x){ return x.toLowerCase().indexOf(searchString.toLowerCase()) != -1;})
-                );
-            }, 100);
-
-            return d.promise;
-        },
-
-        /**
-         * Retrieves specializations from HH API
-         * @returns {Function|promise|Function}
-         */
-        getSpecializations: function(){
-            var d = $q.defer();
-            $http.get(urlUtils.getHHApiUrl("/specializations"))
-                .then(function(data, status, headers, config){
-                    d.resolve(data.data);
-                });
-
-            return d.promise;
-        }
     }
 });

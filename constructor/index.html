@@ -1,1 +1,112 @@
-Hello World!
+<!DOCTYPE html>
+<html lang="en" ng-app="VacancyWidgetConstructorApp">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap 101 Template</title>
+
+    <!-- Bootstrap -->
+
+    <link href="css/lib/bootstrap.min.css" rel="stylesheet">
+    <link href="css/lib/ng-tags-input.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/lib/jquery-ui.css"/>
+    <link rel="stylesheet" type="text/css" href="css/lib/jquery.tree.min.css" />
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="js/lib/html5shiv.js"></script>
+    <script src="js/lib/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body ng-controller="WidgetConstructorCtrl">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-6">
+                <h1>Виджет вакансий</h1>
+                <p>Задайте параметры виджета и скопируйте код размещения на своём сайте.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-8">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label for="professionArea" class="col-xs-3 control-label">Профобласть</label>
+                        <div class="col-xs-9">
+                            <input type="text" class="form-control" id="professionArea" ng-model="professionArea">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="keyWords" class="col-xs-3 control-label">Ключевые слова</label>
+                        <div class="col-xs-9">
+                            <input type="text" class="form-control" id="keyWords" ng-model="keyWords">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label">Регион</label>
+                        <div class="col-xs-9">
+                            <tags-input
+                                ng-model="selectedareas"
+                                custom-class="bootstrap"
+                                >
+                                <auto-complete
+                                        source="loadRegionsSuggestion($query)"
+                                        min-length="2">
+                                </auto-complete>
+                            </tags-input>
+
+                            <!-- Region Modal -->
+                            <modal-dialog modal-data="treeViewModel">
+                                <!-- Tree view control -->
+                                <tree-view areas="areas" selected-areas="selectedareas"/>
+                            </modal-dialog>
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label">Вакансий</label>
+                        <div class="col-xs-9">
+                            <label><input type="radio" name="vacanciesAmount" id="optionsRadios1" value="3" checked>3</label>
+                            <label><input type="radio" name="vacanciesAmount" id="optionsRadios2" value="6" checked>6</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="borderColor" class="col-xs-3 control-label">Цвет рамки</label>
+                        <div class="col-xs-9">
+                            <input type="text" class="form-control" id="borderColor" placeholder="3c3c3c" ng-model="borderColor">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="linkColor" class="col-xs-3 control-label">Цвет ссылок</label>
+                        <div class="col-xs-9">
+                            <input type="text" class="form-control" id="linkColor" placeholder="076cc7" ng-model="linkColor">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-xs-4">
+                <div class="form-group">
+                    <label for="scriptUrl">Код для вставки</label>
+                    <textarea class="form-control" rows="6" id="scriptUrl">{{selectedareas}}</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/lib/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="js/lib/jquery-ui.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/lib/bootstrap.min.js"></script>
+<script src="js/lib/underscore-min.js"></script>
+<script src="js/lib/angular.min.js"></script>
+<script src="js/lib/ng-tags-input.js"></script>
+<script type="text/javascript" src="js/lib/jquery.tree.min.js"></script>
+
+
+<script src="js/common/urlUtils.js"></script>
+<script src="js/common/hh-api.js"></script>
+<script src="js/common/common-controls.js"></script>
+<script src="js/constructor.js"></script>
+</body>
+</html>
