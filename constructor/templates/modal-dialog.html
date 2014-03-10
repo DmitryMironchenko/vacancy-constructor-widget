@@ -1,0 +1,18 @@
+<a href="#" data-toggle="modal" data-target=".region-modal{{_id}}">Выбрать из списка</a>
+
+<div class="modal fade region-modal{{_id}}" tabindex="-1" role="dialog" aria-labelledby="region-modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Выбор региона</h4>
+            </div>
+            <div class="modal-body" ng-transclude>
+                <!-- modal body -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Выбрать</button>
+            </div>
+        </div>
+    </div>
+</div>

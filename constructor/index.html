@@ -10,6 +10,8 @@
 
     <link href="css/lib/bootstrap.min.css" rel="stylesheet">
     <link href="css/lib/ng-tags-input.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/lib/jquery-ui.css"/>
+    <link rel="stylesheet" type="text/css" href="css/lib/jquery.tree.min.css" />
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -45,11 +47,21 @@
                         <label class="col-xs-3 control-label">Регион</label>
                         <div class="col-xs-9">
                             <tags-input
-                                ng-model="regions"
-                                custom-class="bootstrap">
+                                ng-model="selectedareas"
+                                custom-class="bootstrap"
+                                >
                                 <auto-complete
-                                        source="loadRegionsSuggestion($query)"></auto-complete>
+                                        source="loadRegionsSuggestion($query)"
+                                        min-length="2">
+                                </auto-complete>
                             </tags-input>
+
+                            <!-- Region Modal -->
+                            <modal-dialog modal-data="treeViewModel">
+                                <!-- Tree view control -->
+                                <tree-view areas="areas" selected-areas="selectedareas"/>
+                            </modal-dialog>
+
                         </div>
                     </div>
                     <div class="form-group">
@@ -76,20 +88,25 @@
             <div class="col-xs-4">
                 <div class="form-group">
                     <label for="scriptUrl">Код для вставки</label>
-                    <textarea class="form-control" rows="6" id="scriptUrl">{{regions}}</textarea>
+                    <textarea class="form-control" rows="6" id="scriptUrl">{{selectedareas}}</textarea>
                 </div>
             </div>
         </div>
     </div>
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="js/lib/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="js/lib/jquery-ui.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="js/lib/bootstrap.min.js"></script>
 <script src="js/lib/underscore-min.js"></script>
 <script src="js/lib/angular.min.js"></script>
-<script src="js/lib/ng-tags-input.min.js"></script>
+<script src="js/lib/ng-tags-input.js"></script>
+<script type="text/javascript" src="js/lib/jquery.tree.min.js"></script>
+
 
 <script src="js/common/urlUtils.js"></script>
+<script src="js/common/hh-api.js"></script>
+<script src="js/common/common-controls.js"></script>
 <script src="js/constructor.js"></script>
 </body>
 </html>

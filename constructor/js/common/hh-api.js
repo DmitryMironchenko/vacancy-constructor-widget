@@ -1,19 +1,53 @@
 var hhApi = angular.module('hhApi', []);
 
 hhApi.factory('HHApi', function($http, $q, urlUtils){
+    var regionsList,
+        plainRegionsList;
+
     return{
-        /**
-         * Retrieves list of Regions from HH API
-         * @param searchString
-         * @returns {Function|promise|Function}
-         */
-        findRegions: function(searchString){
+        getRegions: function(){
+            console.log('HHApi.getRegions');
             var d = $q.defer();
 
             $http.get(urlUtils.getHHApiUrl('/areas'))
                 .then(function(data, status, headers, config){
-                    d.resolve(data.data);
+                    regionsList = data.data;
+
+                    // Convert areas tree to flat list
+                    var plainList = [];
+                    _(regionsList).each(function(item){
+                        plainList.push(item.name);
+                        _(item.areas).each(arguments.callee, item);
+                    });
+                    plainRegionsList = plainList;
+
+                    d.resolve(regionsList);
                 });
+
+            return d.promise;
+        },
+
+
+        /**
+         * Retrieves list of Regions from HH API converted in plain list
+         * @param searchString
+         * @returns {Function|promise|Function}
+         */
+        searchRegions: function(searchString){
+            var d = $q.defer(),
+                self = arguments.callee;
+
+            if(!regionsList){
+                return
+                    this.getRegions()
+                        .then(function(){return self(searchString);});
+            }else{
+                d.resolve(_.chain(plainRegionsList)
+                    .filter(function(item){return item.toLowerCase().indexOf(searchString.toLowerCase()) != -1})
+                    .take(10)
+                    .value()
+                );
+            }
 
             return d.promise;
         },

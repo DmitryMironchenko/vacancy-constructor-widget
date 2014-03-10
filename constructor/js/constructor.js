@@ -1,4 +1,4 @@
-var constructorApp = angular.module('VacancyWidgetConstructorApp', ['ngTagsInput', 'urlUtils', 'hhApi'])
+var constructorApp = angular.module('VacancyWidgetConstructorApp', ['ngTagsInput', 'urlUtils', 'hhApi', 'commonControls'])
     .config(function(tagsInputConfigProvider) {
         tagsInputConfigProvider
             .setDefaults('tagsInput', {
@@ -12,19 +12,37 @@ var constructorApp = angular.module('VacancyWidgetConstructorApp', ['ngTagsInput
         });
     });
 
-function WidgetConstructorCtrl($scope, VacanciesConstructor, HHApi){
-    $scope.regions = ["Минск", "Москва", "Гатово"];
+function WidgetConstructorCtrl($scope, VacanciesConstructor, HHApi,$rootScope){
+    $scope.areas = [];
+    $scope.selectedareas = [];
+
 
     $scope.keyWords = VacanciesConstructor.buildLink();
 
     $scope.loadRegionsSuggestion = function(query){
-        return HHApi.findRegions(query);
+        return HHApi.searchRegions(query);
     }
+
+    HHApi.getRegions()
+        .then(function(data){$scope.areas = data;});
 
     HHApi.getSpecializations()
         .then(function(data){
-            console.log('Specializations received', data);
+            //console.log('Specializations received', data);
         });
+
+    $scope.$on("ITEMS_SELECTED", function(e, args){
+        console.log('ITEMS_SELECTED event caught in main controller', args.items, $scope.selectedareas, _.union($scope.selectedareas, args.items));
+
+        $scope.selectedareas = angular.copy(_.union($scope.selectedareas, args.items));
+
+        // very bad approach
+        $('.tag-input').focus().blur();
+    });
+
+    $scope.$watchCollection('selectedareas', function(newVal, oldVal){
+        console.log('$scope.selectedareas changed', $scope.selectedareas);
+    }, true);
 }
 
 constructorApp.factory('VacanciesConstructor', function(Serialization){
