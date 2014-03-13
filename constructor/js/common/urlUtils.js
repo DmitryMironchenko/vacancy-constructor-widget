@@ -6,6 +6,10 @@ urlUtils.factory('urlUtils', function(){
     return {
         getHHApiUrl: function(path){
             return HH_API_DOMAIN + path.replace(/^\//, '');
+        },
+
+        getWidgetStorageUrl: function(path){
+            return 'http://example.com/js/widget.js?' + path.replace(/^\//, '');
         }
     }
 });
@@ -112,3 +116,11 @@ urlUtils.factory('Serialization', function(){
         param: $.param
     }
 });
+
+urlUtils.factory('UrlBuilder', function(Serialization, urlUtils){
+    return {
+        buildWidgetLink: function(vacancies, linksColor, borderColor){
+            return urlUtils.getWidgetStorageUrl(Serialization.param(_.extend({}, vacancies, {linksColor: linksColor}, {borderColor: borderColor})));
+        }
+    }
+})

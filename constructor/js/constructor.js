@@ -12,7 +12,7 @@ var constructorApp = angular.module('VacancyWidgetConstructorApp', ['ngTagsInput
         });
     });
 
-function WidgetConstructorCtrl($scope, HHApi,$rootScope, VacancyCriteriaBuilder){
+function WidgetConstructorCtrl($scope, HHApi,$rootScope, VacancyCriteriaBuilder, UrlBuilder){
     $scope.version = '1.0.9';
 
     // Array of areas objects received from hh api endopint
@@ -26,6 +26,8 @@ function WidgetConstructorCtrl($scope, HHApi,$rootScope, VacancyCriteriaBuilder)
     // Specializations
     $scope.specializations = [];
     $scope.selectedSpecializations = [];
+
+    $scope.widgetData = '';
 
     $scope.vacanciesAmount = 6;
 
@@ -60,22 +62,27 @@ function WidgetConstructorCtrl($scope, HHApi,$rootScope, VacancyCriteriaBuilder)
         $('.tag-input').focus().blur();
     }
 
-    _(['selectedAreas', 'selectedSpecializations', 'keyWords', 'vacanciesAmount']).each(function(item){
-            $scope.$watch(item, _.debounce(function(){
-                console.log('$scope watch items...');
-                var criteria = VacancyCriteriaBuilder.buildCriteria(
-                    $scope.selectedAreas,
-                    $scope.selectedSpecializations,
-                    $scope.keyWords
-                );
+    _(['selectedAreas', 'selectedSpecializations', 'keyWords', 'vacanciesAmount', 'borderColor', 'linkColor']).each(function(item){
+        $scope.$watch(item, _.debounce(function(){
+            console.log('$scope watch items...');
+            var criteria = VacancyCriteriaBuilder.buildCriteria(
+                $scope.selectedAreas,
+                $scope.selectedSpecializations,
+                $scope.keyWords
+            );
 
-                console.log('...$scope.$watchCollection', criteria);
-                HHApi.searchVacancies(criteria)
-                    .then(function(resp){
-                        $scope.vacancies = _(resp.items).take($scope.vacanciesAmount);
-                    });
-            }, 1000), true
-            )});
+            console.log('...$scope.$watchCollection', criteria);
+            HHApi.searchVacancies(criteria)
+                .then(function(resp){
+                    $scope.vacancies = _(resp.items).take($scope.vacanciesAmount);
+                });
+        }, 1000), true
+        )});
+
+    $scope.$watch('vacancies', function(){
+        console.log('Building widgetData');
+        $scope.widgetData = UrlBuilder.buildWidgetLink($scope.vacancies, $scope.linksColor, $scope.borderColor);
+    }, true);
 }
 
 constructorApp.factory('VacancyCriteriaBuilder', function(HHApi){
