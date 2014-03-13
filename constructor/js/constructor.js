@@ -13,7 +13,7 @@ var constructorApp = angular.module('VacancyWidgetConstructorApp', ['ngTagsInput
     });
 
 function WidgetConstructorCtrl($scope, HHApi,$rootScope, VacancyCriteriaBuilder, UrlBuilder){
-    $scope.version = '1.0.9';
+    $scope.version = '1.0.11';
 
     // Array of areas objects received from hh api endopint
     $scope.areas = [];

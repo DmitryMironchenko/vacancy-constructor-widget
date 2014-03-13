@@ -9,7 +9,7 @@ urlUtils.factory('urlUtils', function(){
         },
 
         getWidgetStorageUrl: function(path){
-            return 'http://example.com/js/widget.js?' + path.replace(/^\//, '');
+            return 'http://example.com/js/widget.js' + (path?'?':'') + path.replace(/^\//, '');
         }
     }
 });
@@ -120,7 +120,15 @@ urlUtils.factory('Serialization', function(){
 urlUtils.factory('UrlBuilder', function(Serialization, urlUtils){
     return {
         buildWidgetLink: function(vacancies, linksColor, borderColor){
-            return urlUtils.getWidgetStorageUrl(Serialization.param(_.extend({}, vacancies, {linksColor: linksColor}, {borderColor: borderColor})));
+            console.log('UrlBuilder.buildWidgetLink...', vacancies, linksColor, borderColor);
+            var str =
+                '<script src="'
+               +  urlUtils.getWidgetStorageUrl(Serialization.param(_.extend({}, vacancies, linksColor ? {linksColor: linksColor} : {}, borderColor ? {borderColor: borderColor} : borderColor)))
+               + '"></script>'
+            ;
+
+            console.log('...UrlBuilder.buildWidgetLink', str);
+            return str;
         }
     }
 })
