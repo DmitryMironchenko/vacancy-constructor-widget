@@ -9,7 +9,7 @@ urlUtils.factory('urlUtils', function(){
         },
 
         getWidgetStorageUrl: function(path){
-            return 'http://example.com/js/widget.js' + (path?'?':'') + path.replace(/^\//, '');
+            return 'http://example.com/js/vacancies-widget-script.js' + (path?'?':'') + path.replace(/^\//, '');
         }
     }
 });
@@ -119,11 +119,18 @@ urlUtils.factory('Serialization', function(){
 
 urlUtils.factory('UrlBuilder', function(Serialization, urlUtils){
     return {
-        buildWidgetLink: function(vacancies, linksColor, borderColor){
-            console.log('UrlBuilder.buildWidgetLink...', vacancies, linksColor, borderColor);
+        buildWidgetLink: function(regions, vacancies, linksColor, borderColor){
+            console.log('UrlBuilder.buildWidgetLink...', regions, vacancies, linksColor, borderColor);
             var str =
                 '<script src="'
-               +  urlUtils.getWidgetStorageUrl(Serialization.param(_.extend({}, vacancies, linksColor ? {linksColor: linksColor} : {}, borderColor ? {borderColor: borderColor} : borderColor)))
+               +  urlUtils.getWidgetStorageUrl(Serialization.param(_.extend({}, {regions:regions}, {vacancies: _(vacancies).map(function(vacancy){
+                        return {
+                            name: vacancy.name,
+                            employerName: vacancy.employer.name,
+                            salary: vacancy.salary,
+                            link: vacancy.alternate_url
+                        }
+                })}, linksColor ? {linksColor: linksColor} : {}, borderColor ? {borderColor: borderColor} : borderColor)))
                + '"></script>'
             ;
 

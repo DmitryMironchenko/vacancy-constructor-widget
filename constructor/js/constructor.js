@@ -81,7 +81,7 @@ function WidgetConstructorCtrl($scope, HHApi,$rootScope, VacancyCriteriaBuilder,
 
     $scope.$watch('vacancies', function(){
         console.log('Building widgetData');
-        $scope.widgetData = UrlBuilder.buildWidgetLink($scope.vacancies, $scope.linksColor, $scope.borderColor);
+        $scope.widgetData = UrlBuilder.buildWidgetLink($scope.selectedAreas, $scope.vacancies, $scope.linksColor, $scope.borderColor);
     }, true);
 }
 
