@@ -21,14 +21,18 @@
     <![endif]-->
 
     <style>
-        .ngTagsInput.no-input .tags .tag-input {
-            /*border: 1px solid #f00;
-            display:none;*/
+        .ngTagsInput.no-input > .tags > .tag-input {
+            display: none !important;
         }
         .ngTagsInput.no-input .tags {
-            /*border: none;
+            border: none;
             box-shadow: none;
-            background-color: #f00;*/
+            margin:0;
+            padding:0;
+        }
+        .modal-dialog-show-title{
+            float:left;
+            padding: 7px 0 0 0;
         }
     </style>
 </head>
@@ -47,13 +51,11 @@
                     <div class="form-group">
                         <label class="col-xs-3 control-label">Профобласть</label>
                         <div class="col-xs-9">
-                            <span ng-hide="selectedSpecializations.length > 0">Любая</span>
-
+                            <span ng-hide="selectedSpecializations.length > 0" style="padding: 7px 20px 0 0;float:left;">Любая</span>
                             <tags-input
-                                    ng-model="selectedSpecializations"
-                                    custom-class="bootstrap no-input"
-                                    />
-
+                                ng-model="selectedSpecializations"
+                                custom-class="bootstrap no-input"
+                                />
 
                             <!-- Specializations Modal -->
                             <modal-dialog title="Выбор специализаций" ok="Выбрать" cancel="Отмена">
@@ -76,8 +78,8 @@
                                 custom-class="bootstrap"
                                 >
                                 <auto-complete
-                                        source="loadRegionsSuggestion($query)"
-                                        min-length="2">
+                                    source="loadRegionsSuggestion($query)"
+                                    min-length="2">
                                 </auto-complete>
                             </tags-input>
 
@@ -98,13 +100,13 @@
                     <div class="form-group">
                         <label for="borderColor" class="col-xs-3 control-label">Цвет рамки</label>
                         <div class="col-xs-9">
-                            <input type="text" class="form-control" id="borderColor" placeholder="3c3c3c" ng-model="borderColor">
+                            <input type="text" class="form-control" id="borderColor" ng-model="borderColor">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="linkColor" class="col-xs-3 control-label">Цвет ссылок</label>
+                        <label for="linksColor" class="col-xs-3 control-label">Цвет ссылок</label>
                         <div class="col-xs-9">
-                            <input type="text" class="form-control" id="linkColor" placeholder="076cc7" ng-model="linkColor">
+                            <input type="text" class="form-control" id="linksColor" ng-model="linksColor">
                         </div>
                     </div>
                 </form>
