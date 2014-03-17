@@ -19,6 +19,18 @@
     <script src="js/lib/html5shiv.js"></script>
     <script src="js/lib/respond.min.js"></script>
     <![endif]-->
+
+    <style>
+        .ngTagsInput.no-input .tags .tag-input {
+            /*border: 1px solid #f00;
+            display:none;*/
+        }
+        .ngTagsInput.no-input .tags {
+            /*border: none;
+            box-shadow: none;
+            background-color: #f00;*/
+        }
+    </style>
 </head>
 <body ng-controller="WidgetConstructorCtrl">
     <div class="container-fluid">
@@ -26,15 +38,28 @@
             <div class="col-xs-6">
                 <h1>Виджет вакансий</h1>
                 <p>Задайте параметры виджета и скопируйте код размещения на своём сайте.</p>
+                <h3>version: {{version}}</h3>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-8">
                 <form class="form-horizontal" role="form">
                     <div class="form-group">
-                        <label for="professionArea" class="col-xs-3 control-label">Профобласть</label>
+                        <label class="col-xs-3 control-label">Профобласть</label>
                         <div class="col-xs-9">
-                            <input type="text" class="form-control" id="professionArea" ng-model="professionArea">
+                            <span ng-hide="selectedSpecializations.length > 0">Любая</span>
+
+                            <tags-input
+                                    ng-model="selectedSpecializations"
+                                    custom-class="bootstrap no-input"
+                                    />
+
+
+                            <!-- Specializations Modal -->
+                            <modal-dialog title="Выбор специализаций" ok="Выбрать" cancel="Отмена">
+                                <!-- Tree view control -->
+                                <tree-view data="specializations" name="specializations" items-selected="specializationsSelected(data)"/>
+                            </modal-dialog>
                         </div>
                     </div>
                     <div class="form-group">
@@ -47,7 +72,7 @@
                         <label class="col-xs-3 control-label">Регион</label>
                         <div class="col-xs-9">
                             <tags-input
-                                ng-model="selectedareas"
+                                ng-model="selectedAreas"
                                 custom-class="bootstrap"
                                 >
                                 <auto-complete
@@ -57,18 +82,17 @@
                             </tags-input>
 
                             <!-- Region Modal -->
-                            <modal-dialog modal-data="treeViewModel">
+                            <modal-dialog title="Выбор регионов" ok="Выбрать" cancel="Отмена">
                                 <!-- Tree view control -->
-                                <tree-view areas="areas" selected-areas="selectedareas"/>
+                                <tree-view data="areas" name="areas" items-selected="regionsSelected(data)"/>
                             </modal-dialog>
-
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-xs-3 control-label">Вакансий</label>
                         <div class="col-xs-9">
-                            <label><input type="radio" name="vacanciesAmount" id="optionsRadios1" value="3" checked>3</label>
-                            <label><input type="radio" name="vacanciesAmount" id="optionsRadios2" value="6" checked>6</label>
+                            <label><input type="radio" ng-model="vacanciesAmount" value="3">3</label>
+                            <label><input type="radio" ng-model="vacanciesAmount" value="6">6</label>
                         </div>
                     </div>
                     <div class="form-group">
@@ -87,8 +111,11 @@
             </div>
             <div class="col-xs-4">
                 <div class="form-group">
+                    <h1>Widget preview</h1>
+                </div>
+                <div class="form-group">
                     <label for="scriptUrl">Код для вставки</label>
-                    <textarea class="form-control" rows="6" id="scriptUrl">{{selectedareas}}</textarea>
+                    <textarea class="form-control" rows="6" id="scriptUrl">{{widgetData}}</textarea>
                 </div>
             </div>
         </div>
@@ -100,6 +127,7 @@
 <script src="js/lib/bootstrap.min.js"></script>
 <script src="js/lib/underscore-min.js"></script>
 <script src="js/lib/angular.min.js"></script>
+<script src="js/lib/angular-resource.min.js"></script>
 <script src="js/lib/ng-tags-input.js"></script>
 <script type="text/javascript" src="js/lib/jquery.tree.min.js"></script>
 

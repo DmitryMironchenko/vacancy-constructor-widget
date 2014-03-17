@@ -1,14 +1,14 @@
 <div class="tree">
     <ul>
-        <li ng-repeat="r in areas" ng-class="{leaf: r.areas.length == 0, collapsed: r.areas.length > 0}"><input type="checkbox" ng-model="r.checked" ng-checked="r.checked" ng-click="r.checked = !r.checked"/><span>{{r.name}}</span>
-            <ul ng-if="r.areas.length > 0" ng-repeat="rr in r.areas">
-                <li ng-class="{leaf: rr.areas.length == 0, collapsed: rr.areas.length > 0}"><input type="checkbox" ng-model="rr.checked" ng-checked="rr.checked" ng-click="rr.checked = !rr.checked"/><span>{{rr.name}}</span>
-                    <ul ng-if="rr.areas.length > 0">
-                        <li ng-repeat="rrr in rr.areas" ng-class="{leaf: rrr.areas.length == 0, collapsed: rrr.areas.length > 0}"><input type="checkbox" ng-model="rrr.checked" ng-checked="rrr.checked" ng-click="rrr.checked = !rrr.checked"/><span>{{rrr.name}}</span>
-                            <ul ng-if="rrr.areas.length > 0">
-                                <li ng-repeat="rrrr in rrr.areas" ng-class="{leaf: rrrr.areas.length == 0, collapsed: rrrr.areas.length > 0}"><input type="checkbox" ng-model="rrrr.checked" ng-checked="rrrr.checked" ng-click="rrrr.checked = !rrrr.checked"/><span>{{rrrr.name}}</span>
-                                    <ul ng-if="rrrr.areas.length > 0">
-                                        <li ng-repeat="rrrrr in rrrr.areas" ng-class="{leaf: rrrrr.areas.length == 0, collapsed: rrrrr.areas.length > 0}"><input type="checkbox" ng-model="rrrrr.checked" ng-checked="rrrrr.checked" ng-click="rrrrr.checked = !rrrrr.checked"/><span>{{rrrrr.name}}</span></li>
+        <li ng-repeat="r in data" ng-class="{leaf: r[name].length == 0, collapsed: r[name].length > 0}"><input type="checkbox" ng-model="r.checked" ng-checked="r.checked" ng-click="r.checked = !r.checked"/><span>{{r.name}}</span>
+            <ul ng-if="r[name].length > 0" ng-repeat="rr in r[name]">
+                <li ng-class="{leaf: rr[name].length == 0, collapsed: rr[name].length > 0}"><input type="checkbox" ng-model="rr.checked" ng-checked="rr.checked" ng-click="rr.checked = !rr.checked"/><span>{{rr.name}}</span>
+                    <ul ng-if="rr[name].length > 0">
+                        <li ng-repeat="rrr in rr[name]" ng-class="{leaf: rrr[name].length == 0, collapsed: rrr[name].length > 0}"><input type="checkbox" ng-model="rrr.checked" ng-checked="rrr.checked" ng-click="rrr.checked = !rrr.checked"/><span>{{rrr.name}}</span>
+                            <ul ng-if="rrr[name].length > 0">
+                                <li ng-repeat="rrrr in rrr[name]" ng-class="{leaf: rrrr[name].length == 0, collapsed: rrrr[name].length > 0}"><input type="checkbox" ng-model="rrrr.checked" ng-checked="rrrr.checked" ng-click="rrrr.checked = !rrrr.checked"/><span>{{rrrr.name}}</span>
+                                    <ul ng-if="rrrr[name].length > 0">
+                                        <li ng-repeat="rrrrr in rrrr[name]" ng-class="{leaf: rrrrr[name].length == 0, collapsed: rrrrr[name].length > 0}"><input type="checkbox" ng-model="rrrrr.checked" ng-checked="rrrrr.checked" ng-click="rrrrr.checked = !rrrrr.checked"/><span>{{rrrrr.name}}</span></li>
                                     </ul>
                                 </li>
                             </ul>
