@@ -1,7 +1,9 @@
 var urlUtils = angular.module('urlUtils', []);
 
 urlUtils.factory('urlUtils', function(){
-    var HH_API_DOMAIN = "https://api.hh.ru/";
+    var HH_API_DOMAIN = "https://api.hh.ru/",
+        WIDGET_SCRIPT_DOMAIN = "";
+
 
     return {
         getHHApiUrl: function(path){
@@ -9,7 +11,7 @@ urlUtils.factory('urlUtils', function(){
         },
 
         getWidgetStorageUrl: function(path){
-            return 'http://example.com/js/vacancies-widget-script.js' + (path?'?':'') + path.replace(/^\//, '');
+            return WIDGET_SCRIPT_DOMAIN + 'js/vacancies-widget-script.js' + (path?'?':'') + path.replace(/^\//, '');
         }
     }
 });
@@ -119,23 +121,30 @@ urlUtils.factory('Serialization', function(){
 
 urlUtils.factory('UrlBuilder', function(Serialization, urlUtils){
     return {
-        buildWidgetLink: function(regions, vacancies, linksColor, borderColor){
-            console.log('UrlBuilder.buildWidgetLink...', regions, vacancies, linksColor, borderColor);
+        buildWidgetScriptTag: function(regions, vacancies, linksColor, borderColor){
             var str =
-                '<script src="'
-               +  urlUtils.getWidgetStorageUrl(Serialization.param(_.extend({}, {regions:regions}, {vacancies: _(vacancies).map(function(vacancy){
-                        return {
-                            name: vacancy.name,
-                            employerName: vacancy.employer.name,
-                            salary: vacancy.salary,
-                            link: vacancy.alternate_url
-                        }
-                })}, linksColor ? {linksColor: linksColor} : {}, borderColor ? {borderColor: borderColor} : borderColor)))
-               + '"></script>'
+                '<script src="' + this.buildWidgetScriptUrl(regions, vacancies, linksColor, borderColor) + '"></script>'
             ;
 
-            console.log('...UrlBuilder.buildWidgetLink', str);
             return str;
-        }
+        },
+
+        buildWidgetScriptUrl: _.memoize(function(regions, vacancies, linksColor, borderColor){
+            var storageUrl =
+                urlUtils.getWidgetStorageUrl(Serialization.param(_.extend({}, {regions:regions}, {vacancies: _(vacancies).map(function(vacancy){
+                return {
+                    name: vacancy.name,
+                    employerName: vacancy.employer.name,
+                    salary: vacancy.salary,
+                    link: vacancy.alternate_url
+                }
+            })}, linksColor ? {linksColor: linksColor} : {}, borderColor ? {borderColor: borderColor} : borderColor)))
+            ;
+
+            return storageUrl;
+        }, function hashFunction(regions, vacancies, linksColor, borderColor){
+            console.log('buildWidgetScriptUrl.hashFunction', regions, vacancies, linksColor, borderColor);
+            return regions.join(',') + _(vacancies).pluck('name').join(',') + borderColor + ',' + linksColor;
+        })
     }
 })

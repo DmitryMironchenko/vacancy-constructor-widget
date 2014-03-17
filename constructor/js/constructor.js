@@ -13,7 +13,7 @@ var constructorApp = angular.module('VacancyWidgetConstructorApp', ['ngTagsInput
     });
 
 function WidgetConstructorCtrl($scope, HHApi,$rootScope, VacancyCriteriaBuilder, UrlBuilder){
-    $scope.version = '1.0.11';
+    $scope.version = '1.0.13';
 
     // Array of areas objects received from hh api endopint
     $scope.areas = [];
@@ -81,7 +81,10 @@ function WidgetConstructorCtrl($scope, HHApi,$rootScope, VacancyCriteriaBuilder,
 
     $scope.$watch('vacancies', function(){
         console.log('Building widgetData');
-        $scope.widgetData = UrlBuilder.buildWidgetLink($scope.selectedAreas, $scope.vacancies, $scope.linksColor, $scope.borderColor);
+        $scope.widgetData = UrlBuilder.buildWidgetScriptTag($scope.selectedAreas, $scope.vacancies, $scope.linksColor, $scope.borderColor);
+        console.log('URL: ' + UrlBuilder.buildWidgetScriptUrl($scope.selectedAreas, $scope.vacancies, $scope.linksColor, $scope.borderColor));
+
+        $('.widget-preview').empty().append($scope.widgetData);
     }, true);
 }
 

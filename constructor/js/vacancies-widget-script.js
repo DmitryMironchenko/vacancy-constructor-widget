@@ -152,6 +152,7 @@
                     <span class="vacanciesWidget_vacanciesList_vacancyDescription_salary">' +
                     (v.salary && v.salary.from ? 'от ' + v.salary.from : '') +
                     (v.salary && v.salary.to ? (v.salary && v.salary.from ? ' ': '') + 'до ' + v.salary.to : '') +
+                    (v.salary ? ' ' + v.salary.currency : '') +
                     (v.salary ? ', ': '') +
                     '</span> <span class="vacanciesWidget_vacanciesList_vacancyDescription_employer">' + v.employerName + '</span></dd>  \
             </dl>                                                                   \
