@@ -137,7 +137,7 @@
     // HTML to be inserted
     var innerHTML = '';
 
-    if(info.regions && info.regions.length > 0 && info.vacancies && info.vacancies.length){
+    if(info.regions && info.regions.length > 0 && info.vacancies && info.vacancies.length > 0){
         /**/
         innerHTML +=
              '<h4 class="vacanciesWidget_header">Вакансии в регион' + (info.regions.length == 1 ? 'е' : 'ах') + '</h4>'
@@ -150,7 +150,7 @@
         innerHTML += '</ul>';
         /**/
     }
-    if(info.regions && info.regions.length == 0 && info.vacancies && info.vacancies.length == 0 || !info.regions && !info.vacancies){
+    if(!info.regions || !info.vacancies){
         innerHTML +=
             '<a href="http://hh.ru" class="vacanciesWidget_all-vacancies">Вакансии на hh.ru</a>';
     }
