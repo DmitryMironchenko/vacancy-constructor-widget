@@ -12,8 +12,8 @@ var constructorApp = angular.module('VacancyWidgetConstructorApp', ['ngTagsInput
         });
     });
 
-function WidgetConstructorCtrl($scope, HHApi,$rootScope, VacancyCriteriaBuilder, UrlBuilder){
-    $scope.version = '1.0.17';
+function WidgetConstructorCtrl($scope, HHApi,$rootScope, VacancyCriteriaBuilder, UrlBuilder, filterFilter){
+    $scope.version = '1.0.18';
 
     // Array of areas objects received from hh api endopint
     $scope.areas = [];
@@ -42,9 +42,31 @@ function WidgetConstructorCtrl($scope, HHApi,$rootScope, VacancyCriteriaBuilder,
         });
     HHApi.getSpecializations()
         .then(function(data){
-            //console.log('Specializations received', data);
             $scope.specializations = data;
         });
+
+    // TODO: compact code
+    HHApi.getDictionary('employment')
+        .then(function(data){
+            $scope.employment = data;
+        });
+
+    HHApi.getDictionary('schedule')
+        .then(function(data){
+            $scope.schedule = data;
+        });
+
+    HHApi.getDictionary('experience')
+        .then(function(data){
+            $scope.experience = data;
+        });
+
+    HHApi.getDictionary('currency')
+        .then(function(data){
+            $scope.currency = data;
+            $scope.selectedCurrency = $scope.currency[0];
+        });
+
 
     $scope.specializationsSelected = function(data){
         console.log('specializationsSelected', data);
@@ -67,11 +89,17 @@ function WidgetConstructorCtrl($scope, HHApi,$rootScope, VacancyCriteriaBuilder,
         var criteria = VacancyCriteriaBuilder.buildCriteria(
             $scope.selectedAreas,
             $scope.selectedSpecializations,
-            $scope.keyWords
+            $scope.keyWords,
+            filterFilter($scope.employment,{selected:true}),
+            filterFilter($scope.schedule,{selected:true}),
+            $scope.selectedExperience,
+            $scope.hideVacanciesWithoutSalary,
+            $scope.salary,
+            $scope.selectedCurrency
         );
 
-        console.log('$watch selectedAreas, selectedSpecializations, keyWords', criteria, _.some(criteria));
-        if(_.some(criteria)){
+        console.log('$watch', criteria);
+        if(_.some([$scope.selectedAreas.length>0, $scope.selectedSpecializations.length>0, $scope.keyWords!=''])){
             // don't search vacancies if nothing is selected in filters
             HHApi.searchVacancies(criteria)
                 .then(function(resp){
@@ -81,7 +109,7 @@ function WidgetConstructorCtrl($scope, HHApi,$rootScope, VacancyCriteriaBuilder,
             console.log('Emptying vacancies list...');
             $scope.vacancies = [];
         }
-        }
+    }
 
     // Callback used for responding on found vacancies list change. Calls to build widget link.
     var vacanciesChangeCallback = function(){
@@ -91,12 +119,19 @@ function WidgetConstructorCtrl($scope, HHApi,$rootScope, VacancyCriteriaBuilder,
     };
 
     // No keyboard input
-    _(['selectedAreas', 'selectedSpecializations']).each(function(item){
+    _(['selectedAreas',
+        'selectedSpecializations',
+        'employment|filter:{selected:true}',
+        'schedule|filter:{selected:true}',
+        'selectedExperience',
+        'hideVacanciesWithoutSalary',
+        'selectedCurrency']).each(function(item){
         $scope.$watch(item, filtersCallback, true)
     });
     // Watch keywords with debounce because of keyboard input
-    $scope.$watch('keyWords', _.debounce(filtersCallback, 1000), true);
-
+    _(['keyWords', 'salary']).each(function(item){
+        $scope.$watch(item, _.debounce(filtersCallback, 1000), true);
+    });
 
     // Has keyboard input
     _(['borderColor', 'linksColor']).each(function(item){
@@ -110,12 +145,13 @@ function WidgetConstructorCtrl($scope, HHApi,$rootScope, VacancyCriteriaBuilder,
 
 constructorApp.factory('VacancyCriteriaBuilder', function(HHApi){
     return {
-        buildCriteria : function(selectedAreas, selectedSpecializations, keyWords){
+        buildCriteria : function(selectedAreas, selectedSpecializations, keyWords, employmentTypes, scheduleTypes, selectedExperience, hideVacanciesWithoutSalary, salary, selectedCurrency){
             var criteria = {},
                 _selectedAreas = HHApi.getRegionsByNames(selectedAreas);
                 _selectedSpecializations = HHApi.getSpecializationsByNames(selectedSpecializations);
 
             //console.log('VacancyCriteriaBuilder.selectedAreas', _selectedAreas);
+            // TODO: compact code
             _(_selectedAreas).each(function(item){
                 (criteria.area instanceof Array)?'':criteria.area = [];
                 criteria.area.push(item.id);
@@ -126,10 +162,27 @@ constructorApp.factory('VacancyCriteriaBuilder', function(HHApi){
                 criteria.specialization.push(item.id);
             });
 
+            _(employmentTypes).each(function(item){
+                (criteria.employment instanceof Array)?'':criteria.employment = [];
+                criteria.employment.push(item.id);
+            });
+
+            _(scheduleTypes).each(function(item){
+                (criteria.schedule instanceof Array)?'':criteria.schedule = [];
+                criteria.schedule.push(item.id);
+            });
+
+            criteria.experience = selectedExperience;
+            criteria.only_with_salary = hideVacanciesWithoutSalary;
+            criteria.salary = salary? salary.replace(/(\s)*(\.)*(,)*/gi, ''):salary;
+            criteria.currency = criteria.salary ? selectedCurrency : undefined;
+
             criteria.text = keyWords;
 
             //console.log('VacancyCriteriaBuilder.buildCriteria', criteria, selectedAreas, _selectedAreas, selectedSpecializations, _selectedSpecializations);
             return criteria;
         }
+
+        // TODO: add serializeCriteria method that will convert criteria object to part of url
     }
 });

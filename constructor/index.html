@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap 101 Template</title>
+    <title>Виджет вакансий</title>
 
     <!-- Bootstrap -->
 
@@ -41,9 +41,8 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-xs-6">
-                <h1>Виджет вакансий</h1>
+                <h1>Виджет вакансий <i style="font-size:12px;position:absolute;margin-left:10px;">{{version}}</i></h1>
                 <p>Задайте параметры виджета и скопируйте код размещения на своём сайте.</p>
-                <h3>version: {{version}}</h3>
             </div>
         </div>
         <div class="row">
@@ -99,16 +98,91 @@
                             <label><input type="radio" ng-model="vacanciesAmount" value="6">6</label>
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label">Тип занятости</label>
+                        <div class="col-xs-9">
+                            <div class="checkbox" ng-repeat="t in employment">
+                                <label>
+                                    <input
+                                            type="checkbox"
+                                            name="employment[]"
+                                            value="{{t.id}}"
+                                            ng-checked="t.selected"
+                                            ng-click="t.selected = !t.selected"
+                                            > {{t.name}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label">График работы</label>
+                        <div class="col-xs-9">
+                            <div class="checkbox" ng-repeat="t in schedule">
+                                <label>
+                                    <input
+                                            type="checkbox"
+                                            name="occupationTypes[]"
+                                            value="{{t.id}}"
+                                            ng-checked="t.selected"
+                                            ng-click="t.selected = !t.selected"
+                                            > {{t.name}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label">Опыт работы</label>
+                        <div class="col-xs-9">
+                            <div class="radio" ng-repeat="t in experience">
+                                <label>
+                                    <input
+                                            type="radio"
+                                            ng-model="$parent.selectedExperience"
+                                            ng-value="t"
+                                            value="{{t.id}}"
+                                            name="exp"
+                                            > {{t.name}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-class="{'has-error': constructor_form.salary.$dirty && constructor_form.salary.$invalid}">
+                        <label class="col-xs-3 control-label">Уровень заработной платы</label>
+                        <div class="col-xs-9">
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="salary" ng-model="salary" ng-pattern="/^[0-9\s\.\,]*$/">
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{selectedCurrency.code}} <span class="caret"></span></button>
+                                    <ul class="dropdown-menu pull-right">
+                                        <li ng-repeat="c in currency" ng-click="$parent.selectedCurrency=c"><a>{{c.code}}</a></li>
+                                    </ul>
+                                </div><!-- /input-btn-group -->
+                            </div><!-- /input-group -->
+                            <div class="checkbox">
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        ng-model="hideVacanciesWithoutSalary"
+                                        > Скрыть вакансии без указания зарплаты
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="form-group" ng-class="{'has-error': constructor_form.borderColor.$dirty && constructor_form.borderColor.$invalid}">
                         <label for="borderColor" class="col-xs-3 control-label">Цвет рамки</label>
                         <div class="col-xs-9">
-                            <input colorpicker type="text" class="form-control" name="borderColor" id="borderColor" ng-model="borderColor" ng-pattern="/^[0-9a-fA-F]{3,6}$/"/>
+                            <input colorpicker type="text" class="form-control" name="borderColor" id="borderColor" ng-model="borderColor" ng-pattern="/^#([0-9a-fA-F]){3}([0-9a-fA-F]{3})?$/"/>
                         </div>
                     </div>
                     <div class="form-group" ng-class="{'has-error': constructor_form.linksColor.$dirty && constructor_form.linksColor.$invalid}">
                         <label for="linksColor" class="col-xs-3 control-label">Цвет ссылок</label>
                         <div class="col-xs-9">
-                            <input colorpicker type="text" class="form-control" name="linksColor" id="linksColor" ng-model="linksColor" ng-pattern="/^[0-9a-fA-F]{3,6}$/"/>
+                            <input colorpicker type="text" class="form-control" name="linksColor" id="linksColor" ng-model="linksColor" ng-pattern="/^#([0-9a-fA-F]){3}([0-9a-fA-F]{3})?$/"/>
                         </div>
                     </div>
                 </form>

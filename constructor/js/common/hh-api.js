@@ -7,7 +7,10 @@ hhApi.factory('HHApi', function($http, $q, urlUtils, $resource){
 
         specializationsList,
         plainSpecializationsList,
-        plainSpecializationsNamesList;
+        plainSpecializationsNamesList,
+
+        // local variable to store dictionaries
+        dictionaries;
 
     function arrayToParam(arr, paramName){
         return paramName + '=' + arr.join('&' + paramName + '=');
@@ -64,6 +67,7 @@ hhApi.factory('HHApi', function($http, $q, urlUtils, $resource){
 
         /**
          * Returns list of regions objecsts by provided names
+         *
          * @param names
          * @returns {*}
          */
@@ -75,6 +79,7 @@ hhApi.factory('HHApi', function($http, $q, urlUtils, $resource){
 
         /**
          * Returns list of Specializations objecsts by provided names
+         *
          * @param names
          * @returns {*}
          */
@@ -86,6 +91,7 @@ hhApi.factory('HHApi', function($http, $q, urlUtils, $resource){
 
         /**
          * Retrieves specializations from HH API
+         *
          * @returns {Function|promise|Function}
          */
         getSpecializations: function(){
@@ -131,14 +137,76 @@ hhApi.factory('HHApi', function($http, $q, urlUtils, $resource){
             if(criteria.specialization instanceof Array && criteria.specialization.length > 0){
                 urlParams.push(arrayToParam(criteria.specialization, 'specialization'));
             }
+            if(criteria.employment instanceof Array && criteria.employment.length > 0){
+                urlParams.push(arrayToParam(criteria.employment, 'employment'));
+            }
+            if(criteria.schedule instanceof Array && criteria.schedule.length > 0){
+                urlParams.push(arrayToParam(criteria.schedule, 'schedule'));
+            }
             if(criteria.text){
                 urlParams.push('text=' + criteria.text);
             }
-
+            if(criteria.experience){
+                urlParams.push('experience=' + criteria.experience.id);
+            }
+            if(criteria.only_with_salary){
+                urlParams.push('only_with_salary=' + criteria.only_with_salary);
+            }
+            if(criteria.salary){
+                urlParams.push('salary=' + criteria.salary);
+            }
+            if(criteria.currency){
+                urlParams.push('currency=' + criteria.currency.code);
+            }
 
             console.log('hhapi.searchVacancies urlParams:', urlParams, criteria);
             $http.get(urlUtils.getHHApiUrl('/vacancies?' + urlParams.join('&')))
                 .then(function(data, status, headers, config){
+                    d.resolve(data.data);
+                });
+
+            return d.promise;
+        },
+
+        /**
+         * Receives given dictionary object.
+         * @param {string} dictionary The dictionary name
+         * @param {Function} callback The function to be called to process received data.
+         * @returns {Array} Array of dictionary items
+         */
+        getDictionary: function(dictionary, callback){
+            var d = $q.defer();
+
+            if(!dictionaries || dictionaries.length == 0){
+                this._getDictionaries()
+                    .then(function(){
+                        d.resolve(dictionaries[dictionary]);
+                        if(typeof(callback) == 'function'){
+                            callback(dictionaries[dictionary]);
+                        }
+                    });
+            }else{
+                d.resolve(dictionaries[dictionary]);
+                if(typeof(callback) == 'function'){
+                    callback(dictionaries[dictionary]);
+                }
+            }
+
+            return d.promise;
+        },
+
+        /**
+         * Receives the complete list of dictionaries
+         * @returns {Function|promise|Function}
+         */
+        _getDictionaries: function(){
+            var d = $q.defer();
+
+            $http.get(urlUtils.getHHApiUrl('/dictionaries'))
+                .then(function(data){
+                    console.log('Dictionaries received', data);
+                    dictionaries = data.data;
+
                     d.resolve(data.data);
                 });
 
