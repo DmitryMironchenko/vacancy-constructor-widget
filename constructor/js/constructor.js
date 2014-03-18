@@ -1,4 +1,4 @@
-var constructorApp = angular.module('VacancyWidgetConstructorApp', ['ngTagsInput', 'urlUtils', 'hhApi', 'commonControls', 'ngResource'])
+var constructorApp = angular.module('VacancyWidgetConstructorApp', ['ngTagsInput', 'urlUtils', 'hhApi', 'commonControls', 'ngResource', 'colorpicker.module'])
     .config(function(tagsInputConfigProvider) {
         tagsInputConfigProvider
             .setDefaults('tagsInput', {
