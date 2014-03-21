@@ -13,7 +13,7 @@ var constructorApp = angular.module('VacancyWidgetConstructorApp', ['ngTagsInput
     });
 
 function WidgetConstructorCtrl($scope, HHApi,$rootScope, VacancyCriteriaBuilder, UrlBuilder, filterFilter){
-    $scope.version = '1.0.18';
+    $scope.version = '1.0.19';
 
     // Array of areas objects received from hh api endopint
     $scope.areas = [];
@@ -33,7 +33,6 @@ function WidgetConstructorCtrl($scope, HHApi,$rootScope, VacancyCriteriaBuilder,
 
     HHApi.getRegions()
         .then(function(data){
-            //console.log('Regions received', data);
             $scope.areas = angular.copy(data);
 
             $scope.loadRegionsSuggestion = function(query){
@@ -69,7 +68,6 @@ function WidgetConstructorCtrl($scope, HHApi,$rootScope, VacancyCriteriaBuilder,
 
 
     $scope.specializationsSelected = function(data){
-        console.log('specializationsSelected', data);
         $scope.selectedSpecializations = angular.copy(_.union($scope.selectedSpecializations, data));
 
         // very bad approach
@@ -77,7 +75,6 @@ function WidgetConstructorCtrl($scope, HHApi,$rootScope, VacancyCriteriaBuilder,
     }
 
     $scope.regionsSelected = function(data){
-        console.log('regionsSelected', data);
         $scope.selectedAreas = angular.copy(_.union($scope.selectedAreas, data));
 
         // very bad approach
@@ -98,7 +95,6 @@ function WidgetConstructorCtrl($scope, HHApi,$rootScope, VacancyCriteriaBuilder,
             $scope.selectedCurrency
         );
 
-        console.log('$watch', criteria);
         if(_.some([$scope.selectedAreas.length>0, $scope.selectedSpecializations.length>0, $scope.keyWords!=''])){
             // don't search vacancies if nothing is selected in filters
             HHApi.searchVacancies(criteria)
@@ -106,14 +102,12 @@ function WidgetConstructorCtrl($scope, HHApi,$rootScope, VacancyCriteriaBuilder,
                     $scope.vacancies = resp.items;
                 });
         }else{
-            console.log('Emptying vacancies list...');
             $scope.vacancies = [];
         }
     }
 
     // Callback used for responding on found vacancies list change. Calls to build widget link.
     var vacanciesChangeCallback = function(){
-        console.log('...$watch borderColor, linksColor, vacancies, vacanciesAmount');
         $scope.widgetData = UrlBuilder.buildWidgetScriptTag($scope.selectedAreas, _($scope.vacancies).take($scope.vacanciesAmount), $scope.linksColor, $scope.borderColor);
         $('.widget-preview').empty().append($scope.widgetData);
     };
@@ -150,7 +144,6 @@ constructorApp.factory('VacancyCriteriaBuilder', function(HHApi){
                 _selectedAreas = HHApi.getRegionsByNames(selectedAreas);
                 _selectedSpecializations = HHApi.getSpecializationsByNames(selectedSpecializations);
 
-            //console.log('VacancyCriteriaBuilder.selectedAreas', _selectedAreas);
             // TODO: compact code
             _(_selectedAreas).each(function(item){
                 (criteria.area instanceof Array)?'':criteria.area = [];
@@ -179,7 +172,6 @@ constructorApp.factory('VacancyCriteriaBuilder', function(HHApi){
 
             criteria.text = keyWords;
 
-            //console.log('VacancyCriteriaBuilder.buildCriteria', criteria, selectedAreas, _selectedAreas, selectedSpecializations, _selectedSpecializations);
             return criteria;
         }
 
