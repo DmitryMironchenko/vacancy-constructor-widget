@@ -143,7 +143,6 @@ urlUtils.factory('UrlBuilder', function(Serialization, urlUtils){
 
             return storageUrl;
         }, function hashFunction(regions, vacancies, linksColor, borderColor){
-            //console.log('buildWidgetScriptUrl.hashFunction', regions, vacancies, linksColor, borderColor);
             return regions.join(',') + _(vacancies).pluck('name').join(',') + borderColor + ',' + linksColor;
         })
     }

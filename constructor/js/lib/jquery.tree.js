@@ -85,8 +85,6 @@
 
             attributes = $.extend(true, this.options.defaultNodeAttributes, attributes);
 
-            //console.log('_buildNode', this.options);
-
             // create new node label
             var span = $('<span/>', attributes.span);
 
@@ -246,7 +244,6 @@
          * @param position position of the node between brothers (expressed as positive integer)
          */
         addNode: function (attributes, parentLi, position) {
-            //console.log('Tree.addNode', attributes, parentLi, position);
             var t = this;
 
             var li = this._buildNode(attributes);

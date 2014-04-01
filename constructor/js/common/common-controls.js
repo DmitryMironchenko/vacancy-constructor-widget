@@ -48,7 +48,6 @@ commonControls.directive('treeView', function(){
         controller: function($scope){
             this.submitData = function(){
                 checkedItems = _($scope.linkElement.find('.tree:eq(0) input:checked').next()).map(function(item){return item.innerHTML;});
-                console.log('Selected items', checkedItems);
                 $scope.itemsSelected({data: checkedItems});
             }
 

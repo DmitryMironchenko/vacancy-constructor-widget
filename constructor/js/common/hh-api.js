@@ -18,7 +18,6 @@ hhApi.factory('HHApi', function($http, $q, urlUtils, $resource){
 
     return{
         getRegions: function(){
-            //console.log('HHApi.getRegions');
             var d = $q.defer();
 
             $http.get(urlUtils.getHHApiUrl('/areas'))
@@ -159,7 +158,6 @@ hhApi.factory('HHApi', function($http, $q, urlUtils, $resource){
                 urlParams.push('currency=' + criteria.currency.code);
             }
 
-            console.log('hhapi.searchVacancies urlParams:', urlParams, criteria);
             $http.get(urlUtils.getHHApiUrl('/vacancies?' + urlParams.join('&')))
                 .then(function(data, status, headers, config){
                     d.resolve(data.data);
@@ -204,7 +202,6 @@ hhApi.factory('HHApi', function($http, $q, urlUtils, $resource){
 
             $http.get(urlUtils.getHHApiUrl('/dictionaries'))
                 .then(function(data){
-                    console.log('Dictionaries received', data);
                     dictionaries = data.data;
 
                     d.resolve(data.data);
