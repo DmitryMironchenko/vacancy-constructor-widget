@@ -94,8 +94,11 @@
                     <div class="form-group">
                         <label class="col-xs-3 control-label">Вакансий</label>
                         <div class="col-xs-9">
-                            <label><input type="radio" ng-model="vacanciesAmount" value="3">3</label>
-                            <label><input type="radio" ng-model="vacanciesAmount" value="6">6</label>
+                            <div class="radio" ng-repeat="i in [3,6]">
+                                <label>
+                                    <input type="radio" name="vacAmnt" ng-model="$parent.vacanciesAmount" value="{{i}}">{{i}}
+                                </label>
+                            </div>
                         </div>
                     </div>
 

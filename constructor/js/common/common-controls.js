@@ -47,7 +47,7 @@ commonControls.directive('treeView', function(){
 
         controller: function($scope){
             this.submitData = function(){
-                checkedItems = _($scope.linkElement.find('.tree:eq(0) input:checked').next()).map(function(item){return item.innerText;});
+                checkedItems = _($scope.linkElement.find('.tree:eq(0) input:checked').next()).map(function(item){return item.innerHTML;});
                 $scope.itemsSelected({data: checkedItems});
             }
 
@@ -61,7 +61,11 @@ commonControls.directive('treeView', function(){
                             descendants: 'uncheck'
                         },
                         components: ['checkbox'],
-                        nodes: $scope.nodes
+                        nodes: $scope.nodes,
+                        collapseEffect: 'blind',
+                        expandEffect: 'blind',
+                        collapseDuration: 1,
+                        expandDuration: 1
                     });
             }
         },
@@ -75,15 +79,6 @@ commonControls.directive('treeView', function(){
                     controllers[1].registerShowListener(controllers[0].renderTree);
                 }
                 $scope.linkElement = $linkElement;
-
-                /*
-                setTimeout(function(){$linkElement.find('.tree:eq(0)').tree({
-                    onCheck: {
-                        ancestors: 'uncheck',
-                        descendants: 'uncheck'
-                    }
-                });}, 1000);
-                */
 
                 $scope.$watch('data', function(){
                     if($scope.data.length > 0){

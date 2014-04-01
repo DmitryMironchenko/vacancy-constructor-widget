@@ -18,11 +18,9 @@
 
         if(el.src.match(re) && foundEls.indexOf(el) < 0) {
             foundEls.push(el);
-            //console.log('Identified embed tag %o', el);
         }
     }
 
-    console.log('Found Elements', foundEls);
     element = foundEls[0];
 
     var parseQueryString = function(url) {
@@ -123,7 +121,6 @@
 
     // And in the script tags loop
     var info = parseQueryString(foundEls[0].src.split('?').length > 1 ? foundEls[0].src.split('?')[1]:'');
-    console.log("QueryString parsed", info);
 
     var newElement = document.createElement("aside"),
         styleElement = document.createElement("style");
