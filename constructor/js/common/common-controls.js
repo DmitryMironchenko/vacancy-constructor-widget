@@ -4,14 +4,14 @@ commonControls.directive('treeView', function(){
     function _convertDataForTreeView(data, childrenFieldName){
         /*
         convertedData = [{
-            span: {html: 'Pizdec 1'},
+            span: {html: 'Qwerty 1'},
             children: [{
-                span: {html: 'Pizdec 1.1'}
+                span: {html: 'Qwerty 1.1'}
             },{
-                span: {html: 'Pizdec 1.2'}
+                span: {html: 'Qwerty 1.2'}
             }]
         },{
-            span: {html: 'Pizdec 2'}
+            span: {html: 'Qwerty 2'}
         }]
         */
         var convertedData = [];
